@@ -38,9 +38,100 @@ It prints one line per check. Fix the failures yourself: the agent may explain a
 
 ## How to start it
 <!-- The exact command, so the lecturer can run your server too. -->
+npm run --silent mcp
 
 ## Session transcript
 <!-- Paste one full session: initialize, the reply, tools/list, one good tools/call, one that fails. -->
 
+<!-- 10/16/2026
+
+@Floppain ➜ /workspaces/webdev-273223042 (main) $ node mcp-server/check.mjs -- node mcp-server/server.js
+ok   initialize answered
+ok   notification gets no reply
+ok   tools/list returns your tools
+ok   find_lecture has an input schema
+ok   find_lecture has a real description
+ok   a second tool of your own
+ok   every tool has a real description
+ok   find_lecture returns lecture 5
+ok   a lecture that does not exist is a tool error
+ok   unknown tool is a protocol error (-32602)
+ok   unknown method is a protocol error (-32601)
+ok   nothing but protocol on stdout
+
+12/12 checks passed
+@Floppain ➜ /workspaces/webdev-273223042 (main) $ node mcp-server/server.js
+gemini
+got: gemini
+<anonymous_script>:1
+gemini
+^
+
+SyntaxError: Unexpected token 'g', "gemini" is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Interface.<anonymous> (/workspaces/webdev-273223042/mcp-server/server.js:83:29)
+    at Interface.emit (node:events:519:28)
+    at [_onLine] [as _onLine] (node:internal/readline/interface:419:12)
+    at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:613:22)
+    at ReadStream.ondata (node:internal/readline/interface:250:23)
+    at ReadStream.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+
+Node.js v22.23.3
+@Floppain ➜ /workspaces/webdev-273223042 (main) $ node mcp-server/server.js
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"me","version":"1.0.0"}}}
+{"jsonrpc":"2.0","method":"notifications/initialized"}
+{"jsonrpc":"2.0","id":2,"method":"tools/list"}
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":5}}}
+{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":99}}}got: {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"me","version":"1.0.0"}}}
+{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-11-25","capabilities":{"tools":{}},"serverInfo":{"name":"lectures","version":"0.1.0"}}}
+got: {"jsonrpc":"2.0","method":"notifications/initialized"}
+got: {"jsonrpc":"2.0","id":2,"method":"tools/list"}
+{"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"find_lecture","description":"Return the title and topics of one course lecture by its number, 1 to 10. Use it when asked what alecture covers.","inputSchema":{"type":"object","properties":{"number":{"type":"integer","description":"Lecture number, 1 to 10"}},"required":["number"]}},{"name":"list_lectures","description":"List the number and title of every course lecture. Use it when asked what the course covers.","inputSchema":{"type":"object","properties":{}}}]}}
+got: {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":5}}}
+{"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"Lecture 5: What the agent built, part 1. Topics: HTTP, REST vs GraphQL, data modeling, ORM, layers"}],"isError":false}}
+
+got: {"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":99}}}
+{"jsonrpc":"2.0","id":4,"result":{"content":[{"type":"text","text":"There is no lecture 99. The course has lectures 1 to 10."}],"isError":true}}
+
+got:
+<anonymous_script>:1
+
+
+SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>)
+    at Interface.<anonymous> (/workspaces/webdev-273223042/mcp-server/server.js:83:29)
+    at Interface.emit (node:events:519:28)
+    at [_onLine] [as _onLine] (node:internal/readline/interface:419:12)
+    at [_normalWrite] [as _normalWrite] (node:internal/readline/interface:613:22)
+    at ReadStream.ondata (node:internal/readline/interface:250:23)
+    at ReadStream.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+
+Node.js v22.23.3
+@Floppain ➜ /workspaces/webdev-273223042 (main) $ node mcp-server/server.js
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"me","version":"1.0.0"}}}
+got: {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"me","version":"1.0.0"}}}
+{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-11-25","capabilities":{"tools":{}},"serverInfo":{"name":"lectures","version":"0.1.0"}}}
+{"jsonrpc":"2.0","method":"notifications/initialized"}
+got: {"jsonrpc":"2.0","method":"notifications/initialized"}
+{"jsonrpc":"2.0","id":2,"method":"tools/list"}
+got: {"jsonrpc":"2.0","id":2,"method":"tools/list"}
+{"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"find_lecture","description":"Return the title and topics of one course lecture by its number, 1 to 10. Use it when asked what alecture covers.","inputSchema":{"type":"object","properties":{"number":{"type":"integer","description":"Lecture number, 1 to 10"}},"required":["number"]}},{"name":"list_lectures","description":"List the number and title of every course lecture. Use it when asked what the course covers.","inputSchema":{"type":"object","properties":{}}}]}}
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":5}}}
+got: {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":5}}}
+{"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"Lecture 5: What the agent built, part 1. Topics: HTTP, REST vs GraphQL, data modeling, ORM, layers"}],"isError":false}}
+{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":99}}}
+got: {"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"find_lecture","arguments":{"number":99}}}
+{"jsonrpc":"2.0","id":4,"result":{"content":[{"type":"text","text":"There is no lecture 99. The course has lectures 1 to 10."}],"isError":true}}
+
+ -->
+
 ## The description experiment
 <!-- Three sentences: what you changed in the description, whether the model chose the tool differently, and why you think so. -->
+
+<!-- I changed the description to have a vaguer sentence "Tell me what the course is about". But, I left the original description as a comment, and the result is the same as the first run. This is probably because the agent can read comments and act on them as well.-->
