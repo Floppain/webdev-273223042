@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab Bookings - Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f9; color: #333; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h2 { margin-top: 0; }
+    .room-list { list-style: none; padding: 0; }
+    .room-item { padding: 15px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; background: #fff; }
+    .room-item.grayed-out { background: #e9ecef; color: #6c757d; }
+    .reason { color: #d9534f; font-weight: bold; margin-top: 5px; }
+    footer { margin-top: 40px; text-align: center; font-size: 14px; color: #666; }
+    footer a { color: #007bff; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Available Rooms (Dashboard)</h2>
+    <p>Welcome! Here are the rooms for today.</p>
+    <ul id="roomList" class="room-list"></ul>
+  </div>
+  <footer>
+    <a href="/about">About this website</a>
+  </footer>
+
+  <script>
+    async function loadRooms() {
+      try {
+        const res = await fetch('/api/rooms');
+        if (res.status === 401) {
+          window.location.href = '/login?error=' + encodeURIComponent('You must be a registered student to book a room.');
+          return;
+        }
+        const data = await res.json();
+        if (data.success) {
+          const list = document.getElementById('roomList');
+          list.innerHTML = '';
+          data.rooms.forEach(room => {
+            const li = document.createElement('li');
+            let className = 'room-item';
+            if (room.fullyAppointed) {
+              className += ' grayed-out';
+            }
+            li.className = className;
+            
+            let html = `<strong>${room.name}</strong> (${room.type}) - Capacity: ${room.capacity}`;
+            if (room.fullyAppointed) {
+              html += ' <em>[Fully Appointed - Option Grayed Out]</em>';
+            }
+            if (!room.available && room.unavailableReason) {
+              html += `<div class="reason">${room.unavailableReason.replace(/\n/g, '<br>')}</div>`;
+            }
+            li.innerHTML = html;
+            list.appendChild(li);
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load rooms', err);
+      }
+    }
+    loadRooms();
+  </script>
+</body>
+</html>

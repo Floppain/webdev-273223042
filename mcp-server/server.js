@@ -22,10 +22,26 @@ const tools = [
     },
   },
   {
-    name: 'list_lectures',
-    description: // 'List the number and title of every course lecture. Use it when asked what the course is about.',
-    'Tell me what the courses are about',
-    inputSchema: { type: 'object', properties: {} },
+    name: 'get_syllabus',
+    description: 'Return the URL of the syllabus for the course. Use it when asked for the whole course syllabus or the main website.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  {
+    name: 'get_excercise_link',
+    description: 'Return the URL of a specific excercise page. Use it when asked for a link to a particular excercise.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        number: {
+          type: 'integer',
+          description: 'Excercise number, 1 to 5'
+        },
+      },
+      required: ['number'],
+    },
   },
 ];
 
@@ -64,12 +80,30 @@ function handle(msg) {
       }
       return textResult(msg.id, 'Lecture ' + lecture.number + ': ' + lecture.title + '. Topics: ' + lecture.topics, false);
     }
-    if (name === 'list_lectures') {
-      return textResult(msg.id, lectures.map((l) => l.number + '. ' + l.title).join('\n'), false);
+    if (name === 'get_syllabus') {
+      return textResult(msg.id, 'https://webdev-course.tu-sofia.workers.dev/en/#syllabus', false);
     }
+    if (name === 'get_excercise_link') {
+    if (!Number.isInteger(args.number) || args.number < 1 || args.number > 5) {
+      return textResult(
+        msg.id,
+        'Invalid excercise number. Please provide a number from 1 to 5.',
+        true
+      );
+    }
+    const url = 'https://webdev-course.tu-sofia.workers.dev/en/resources/exercises/' + args.number;
+    return textResult(
+      msg.id,
+      'Excercise ' + args.number + ' website: ' + url,
+      false
+    );
+  }
+
     // A tool we never offered: the message itself is wrong, so it is a protocol error.
     return { jsonrpc: '2.0', id: msg.id, error: { code: -32602, message: 'Unknown tool: ' + name } };
   }
+
+
   if (msg.id !== undefined) {
     // Any other request we do not know.
     return { jsonrpc: '2.0', id: msg.id, error: { code: -32601, message: 'Unknown method: ' + msg.method } };

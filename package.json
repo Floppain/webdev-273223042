@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/Floppain/webdev-273223042/issues"
   },
-  "homepage": "https://github.com/Floppain/webdev-273223042#readme"
+  "homepage": "https://github.com/Floppain/webdev-273223042#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.3.0"
+  }
 }
