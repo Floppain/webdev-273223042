@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "node --test",
+    "coverage": "node --test",
     "mcp": "node mcp-server/server.js"
   },
   "repository": {
