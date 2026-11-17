@@ -115,7 +115,6 @@ function handle(msg) {
 const lines = readline.createInterface({ input: process.stdin });
 
 lines.on('line', (line) => {
-  console.error('got: ' + line);
   const reply = handle(JSON.parse(line));
   if (reply) send(reply);
 });
