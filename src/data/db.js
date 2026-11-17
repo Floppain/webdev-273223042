@@ -24,12 +24,9 @@ function runMigrations() {
         const sql = fs.readFileSync(filePath, 'utf8');
         db.transaction(() => {
           db.exec(sql);
-          db.transaction(() => {
-          db.exec(sql);
           db.prepare('INSERT OR IGNORE INTO migrations_meta (name) VALUES (?)').run(file);
         })();
-        })();
-        console.log(`Executed migration: ${file}`);
+        console.error(`Executed migration: ${file}`);
       }
     }
   }
