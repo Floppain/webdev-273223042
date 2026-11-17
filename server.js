@@ -1,7 +1,6 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const path = require('path');
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 const roomService = require('./src/services/roomService');
 require('./src/data/db'); // ensure database & migrations run
 
@@ -10,7 +9,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 // Mount auth routes
 app.use(authRoutes);

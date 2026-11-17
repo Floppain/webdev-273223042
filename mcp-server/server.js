@@ -1,6 +1,7 @@
 const readline = require('node:readline');
 const fs = require('node:fs');
 const path = require('node:path');
+const authRoutes = require('../src/routes/authRoutes');
 
 // The lectures, read once when the server starts.
 const lectures = JSON.parse(fs.readFileSync(path.join(__dirname, 'lectures.json'), 'utf8'));

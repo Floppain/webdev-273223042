@@ -1,11 +1,9 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const authService = require('../services/authService');
 
 const router = express.Router();
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
-router.use(cookieParser());
 
 // Simple session store mockup for step 2 & 3
 const sessions = new Map();
@@ -14,7 +12,7 @@ router.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await authService.authenticateUser(username, password);
-    
+
     const sessionId = Math.random().toString(36).substring(2);
     sessions.set(sessionId, user);
     res.cookie('session_id', sessionId, { httpOnly: true });
@@ -27,7 +25,7 @@ router.post('/api/auth/login', async (req, res) => {
 
 // Middleware for auth check
 function requireAuth(req, res, next) {
-  const sessionId = req.cookies.session_id;
+  const sessionId = req.headers.cookie?.match(/(?:^|;\s*)session_id=([^;]*)/)?.[1];
   const user = sessionId ? sessions.get(sessionId) : null;
   if (!user) {
     return res.status(401).redirect('/login?error=' + encodeURIComponent('You must be a registered student to book a room.'));

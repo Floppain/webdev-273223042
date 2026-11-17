@@ -51,3 +51,10 @@ One entry per agent session, newest at the bottom. Be honest: what went wrong is
    3. Open http://localhost:3000 in your browser, sign in with student@test.com / Password123!, and view
       the dashboard displaying available rooms, fully appointed rooms (grayed out), and unavailable room
       reasons (AC-1, AC-2, AC-9, AC-10, AC-11).
+
+## 2026-11-17 · Fixing local app startup
+- Goal: Find why the website would not open locally
+- Delegated: None
+- Checkpoints: 1
+- Went wrong: Startup was not run after permission was denied. The app server imported the auth router from a nonexistent path and depended on an undeclared `cookie-parser` package.
+- Changed by hand: Corrected the router path, removed a placeholder login response that hid the page, and read the session cookie directly so the app does not require an unapproved dependency install.
