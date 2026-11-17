@@ -57,4 +57,4 @@ One entry per agent session, newest at the bottom. Be honest: what went wrong is
 - Delegated: None
 - Checkpoints: 1
 - Went wrong: Startup was not run after permission was denied. The app server imported the auth router from a nonexistent path and depended on an undeclared `cookie-parser` package.
-- Changed by hand: Corrected the router path, removed a placeholder login response that hid the page, and read the session cookie directly so the app does not require an unapproved dependency install.
+- Changed by hand: Corrected the router path, removed a placeholder login response that hid the page, and read the session cookie directly so the app does not require an unapproved dependency install. 
